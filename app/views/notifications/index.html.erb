@@ -1,0 +1,41 @@
+<h1>Listing notifications</h1>
+
+<table id="notifications">
+  <tr>
+    <th>Message</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @notifications.each do |notification| %>
+  <tr>
+    <td><%= notification.message %></td>
+    <td><%= link_to 'Show', notification %></td>
+    <td><%= link_to 'Edit', edit_notification_path(notification) %></td>
+    <td><%= link_to 'Destroy', notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Notification', new_notification_path %>
+
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  var socket = io.connect('//localhost:3001/');
+
+  socket.on('message', function (data) {
+    data = JSON.parse(data);
+    console.log(data);
+
+    var notification = $("<tr/>", {
+      html: $("<td/>", { text: data.message })
+    });
+    $('#notifications').append(notification)
+
+  });
+
+});
+</script>
